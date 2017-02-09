@@ -1,0 +1,146 @@
+ToplevelMenu
+	submenu
+		option page
+			plugin
+				create_section()
+				createFields()	register_settings()
+				do_settings_sections()
+					
+				<form method="post" action="options.php">
+					<?php
+						settings_fields( $option_group1 );
+						do_settings_sections( $page );						
+						submit_button();
+					?>
+		        </form>
+				
+	submenu
+		verzamel option page
+		
+				<form method="post" action="options.php">
+					<?php
+						settings_fields( $option_group1 );
+						do_settings_sections( $page1 );	
+						
+						settings_fields( $option_group1 );
+						do_settings_sections( $page2 );
+											
+						submit_button();
+					?>
+		        </form>
+	
+	
+	
+een option pagina of een verzamel pagina met tabbed options
+
+
+
+
+
+Option ID: required – This argument is the ID of the field for the value you're attempting to retrieve.
+Default: Optional – This is the value the function will return if the function returns an empty value 
+(such as in the case that the option is not found in the database).
+
+get_option($optionID:string, $default:string)
+
+add_menu_page()
+add_submenu_page
+createSection()
+createFields()
+registerSettings()
+
+add_menu_page( 
+	$page_title,			// string  
+	$menu_title, 			// string 
+	$capability, 			// string 
+ 	menu_slug, 				// string 
+	$function = '', 		// callable
+	$icon_url = '', 		// string 
+	$position = null		// int
+)
+
+
+/* ------------------------------------------------------------------------ *
+ * Add Section
+ * ------------------------------------------------------------------------ */
+
+function tfc_add_settings_section() {
+	add_settings_section( 
+		$id, 			// ID used to identify this section and with which to register options
+		$title, 		// Title to be displayed on the administration page
+		$callback, 		// Callback used to render the description of the section
+		$page 			// Page on which to add this section of options
+	);
+}
+add_action('admin_init', 'tfc_add_settings_section');
+
+/* Section Callback
+ * This function provides a simple description for the General Options page.
+
+ * You can add this section to any of the pages under the Settings menu
+	General, "general"
+	Writing, "writing"
+	Reading, "reading"
+	Discussion, "discussion"
+	Media, "media"
+	Privacy, "privacy"
+	Permalinks, "permalink"
+ * ------------------------------------------------------------------------ */
+
+function section_callback() {
+    echo '<p>Select which areas of content you wish to display.</p>';
+}
+
+/* ------------------------------------------------------------------------ *
+ * Adding Fields to section
+ * ------------------------------------------------------------------------ */
+.
+add_settings_field( 
+	$id, 						// ID used to identify the field throughout the theme
+	$title, 					// The label to the left of the option interface element
+	$field_callback($args), 	// The name of the function responsible for rendering the option interface
+						   		   Name and id of the input should match the $id given to this function. 
+						   		   The function should echo its output.
+	$page, 						// The page on which this option will be displayed
+	$section, 					// The name of the section to which this field belongs
+	$args						// Array of arguments to pass to the callback.
+);
+
+function field_callback($args) {
+    $html = '<input type="checkbox" id="show_header" name="show_header" value="1" ' 
+            . checked(1, get_option('show_header'), false) . '/>'; 
+
+	    // Here, we will take the first argument of the array and add it to a label next to the checkbox
+	    $html .= '<label for="show_header"> '  . $args[0] . '</label>'; 
+	
+	    echo $html;
+}
+
+/* ------------------------------------------------------------------------ *
+ * Register setting, must be invoked for each field
+ * ------------------------------------------------------------------------ */
+
+register_setting( 
+	$option_group, 				// string: This is actually the name of the group of options
+	$option_name, 				// string: This is the ID of the field
+	$sanitize_callback 			// callback: Name of a function that will be called prior to saving the data to the database
+);
+
+
+/* ------------------------------------------------------------------------ *
+ *  settings_fields( $option_group )
+ * 	Output nonce, action, and option_page fields for a settings page. 
+	Please note that this function must be called inside of the form tag for the options page.
+ * ------------------------------------------------------------------------ */
+
+	settings_fields( $option_group );
+	
+
+/* ------------------------------------------------------------------------ *
+ *  do_settings_sections()
+ * 	Prints out all settings sections added to a particular settings page
+ * ------------------------------------------------------------------------ */
+
+	do_settings_sections( string $page );
+
+
